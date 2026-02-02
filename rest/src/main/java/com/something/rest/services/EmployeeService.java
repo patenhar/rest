@@ -5,9 +5,11 @@ import com.something.rest.dtos.request.EmployeeReqDto;
 import com.something.rest.dtos.response.EmployeeResDto;
 import com.something.rest.entities.Employee;
 import com.something.rest.repos.EmployeeRepo;
+import com.something.rest.utils.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,11 +47,11 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public Optional<Employee> update(Long id, EmployeeReqDto employeeReqDto) {
-        return employeeRepo.findById(id).map(employee -> {
-            modelMapper.map(employee, EmployeeResDto.class);
-            return employeeRepo.save(employee);
-        });
+    public EmployeeResDto update(Long id, EmployeeReqDto employeeReqDto) {
+        Employee employee = employeeRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+        modelMapper.map(employeeReqDto, employee);
+        Employee updated = employeeRepo.save(employee);
+        return modelMapper.map(updated, EmployeeResDto.class);
     }
 
     @Override
@@ -58,11 +60,9 @@ public class EmployeeService implements IEmployeeService {
     }
 
     @Override
-    public String delete(Long id) {
+    public void delete(Long id) {
         if(employeeRepo.findById(id).isPresent()){
             employeeRepo.deleteById(id);
-            return "User deleted successfully";
         }
-        return "User not found";
     }
 }

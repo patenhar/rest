@@ -13,19 +13,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-        @ExceptionHandler(MethodArgumentNotValidException.class)
-        public ResponseEntity<Map<String, Object>> handleValidationError(MethodArgumentNotValidException ex) {
-            Map<String, Object> errors = new LinkedHashMap<>();
-            errors.put("status", HttpStatus.BAD_REQUEST.value());
-            errors.put("errors", ex.getBindingResult().getFieldErrors()
-                    .stream()
-                    .map(err -> Map.of("field", err.getField(), "message", err.getDefaultMessage()))
-                    .toList());
-            return ResponseEntity.badRequest().body(errors);
-        }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Map<String, Object>>> handleValidationError(MethodArgumentNotValidException ex) {
+        Map<String, Object> errors = new LinkedHashMap<>();
+        errors.put("status", HttpStatus.BAD_REQUEST.value());
+        errors.put("errors", ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(err -> Map.of("field", err.getField(), "message", err.getDefaultMessage()))
+                .toList());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>("Validation failed", errors));
+    }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
-        return new ResponseEntity<>("Unexpected error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ApiResponse<String>> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>("Unexpected error: " + ex.getMessage(), null));
     }
 }

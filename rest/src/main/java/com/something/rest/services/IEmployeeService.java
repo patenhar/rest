@@ -11,9 +11,8 @@ public interface IEmployeeService {
     List<EmployeeResDto> getAll();
     EmployeeResDto getById(Long id);
     EmployeeResDto create(EmployeeReqDto employeeReqDto);
-    Optional<Employee> update(Long id, EmployeeReqDto employeeReqDto);
+    EmployeeResDto update(Long id, EmployeeReqDto employeeReqDto);
     EmployeeResDto updateName(Long id, String name);
-
-    String delete(Long id);
+    void delete(Long id);
 }
 
