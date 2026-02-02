@@ -1,5 +1,6 @@
 package com.something.rest.dtos.request;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,5 +19,6 @@ public class EmployeeReqDto {
 
     @NotNull(message = "age is required")
     @Min(value = 18, message = "minimum 18 years are required")
+    @Max(value = 60, message = "age cannot be greater than 60")
     private int age;
 }

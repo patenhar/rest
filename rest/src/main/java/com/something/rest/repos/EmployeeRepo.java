@@ -9,5 +9,5 @@ import org.springframework.data.repository.query.Param;
 public interface EmployeeRepo extends JpaRepository<Employee, Long> {
     @Modifying
     @Query(value = "UPDATE Employee e SET e.name = :name WHERE e.id = :id")
-    Employee updateEmployeeName(@Param("id") Long id, @Param("name") String name);
+    int updateEmployeeName(@Param("id") Long id, @Param("name") String name);
 }

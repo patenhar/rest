@@ -18,4 +18,7 @@ public class Employee {
 
     @Column
     private int age;
+
+    @Column
+    private String imagePath;
 }
